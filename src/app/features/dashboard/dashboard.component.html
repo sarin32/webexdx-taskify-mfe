@@ -1,0 +1,65 @@
+
+<div class="space-y-6 max-w-screen-md m-auto">
+  <button hlmBtn (click)="navToCreateTask()" variant="outline">
+    Create Task
+  </button>
+  <!-- Filters -->
+  <div class="flex space-x-4 mb-4 items-center">
+    <span class="font-semibold text-gray-700">Priority:</span>
+    <select
+      [(ngModel)]="form.value.priority"
+      class="select p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+      (change)="fetchTaskList()"
+    >
+      @for (priority of priorities; track priority.value) {
+        <option [value]="priority.value">{{ priority.label }}</option>
+      }
+    </select>
+
+    <span class="font-semibold text-gray-700">Status:</span>
+    <select
+      [(ngModel)]="form.value.status"
+      class="select p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+      (change)="fetchTaskList()"
+    >
+      @for (status of statuses; track status.value) {
+        <option [value]="status.value">{{ status.label }}</option>
+      }
+    </select>
+
+    @if (form.errors?.['root']) {
+      <div class="text-red-500 text-sm">
+        {{ form.errors?.['root'] }}
+      </div>
+    }
+  </div>
+
+  <!-- Task List -->
+  @for (task of tasks; track task._id) {
+    <div class="bg-white p-6 mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <div class="flex justify-between items-start mb-3">
+        <div>
+          <h3 class="text-xl font-semibold text-gray-800">{{ task.title }}</h3>
+          <p class="text-sm text-gray-600">{{ task.description }}</p>
+        </div>
+        <h3 class="text-sm text-gray-500">{{ task.dueDate | date: 'dd MMM yy' }}</h3>
+      </div>
+
+      <div class="flex space-x-4 mb-4">
+        <p class="text-sm text-gray-600">Priority: <span class="font-semibold">{{ task.priority }}</span></p>
+        <p class="text-sm text-gray-600">Status: <span class="font-semibold">{{ task.isCompleted ? 'Completed' : 'Pending' }}</span></p>
+      </div>
+
+      <div class="flex space-x-4">
+        <button (click)="edit(task)" hlmBtn variant="secondary" class="px-4 py-2">
+          Edit
+        </button>
+        <button (click)="deleteTask(task._id)" hlmBtn variant="destructive" class="px-4 py-2">
+          Delete
+        </button>
+      </div>
+    </div>
+  } @empty {
+    <div class="text-center text-sm text-gray-500">No Tasks available.</div>
+  }
+</div>
