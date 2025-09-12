@@ -3,17 +3,34 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { Priority, TaskService } from '../task.service';
 import { lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { HlmButtonModule } from '@spartan-ng/helm/button';
+import { HlmInputModule } from '@spartan-ng/helm/input';
+import { HlmLabelModule } from '@spartan-ng/helm/label';
+import { BrnSelectModule } from '@spartan-ng/brain/select';
+import { HlmSelectModule } from '@spartan-ng/helm/select';
+import { HlmDatePickerModule } from '@spartan-ng/helm/date-picker';
 
 
 @Component({
   selector: 'app-create-task',
-  imports: [ReactiveFormsModule, FormsModule],
-  templateUrl: './create-task.component.html',
-  styleUrl: './create-task.component.css'
+  standalone: true,
+  imports: [
+    ReactiveFormsModule, 
+    FormsModule, 
+    HlmButtonModule, 
+    HlmInputModule, 
+    HlmLabelModule,
+    BrnSelectModule,
+    HlmSelectModule,
+    HlmDatePickerModule
+  ],
+  templateUrl: './create-task.component.html'
 })
 export class CreateTaskComponent {
   private fb = inject(FormBuilder)
   private taskService = inject(TaskService)
+  private router = inject(Router);
   form = this.fb.group({
     title: ['', Validators.required],
     description: [''],
@@ -37,6 +54,10 @@ export class CreateTaskComponent {
     }
   ];
 
+  navigateBack() {
+    this.router.navigate(['']);
+  }
+
   async onSubmit() {
     if (!this.form.valid) {
       this.form.markAllAsTouched()
@@ -49,7 +70,7 @@ export class CreateTaskComponent {
         description: this.form.value.description!,
         dueDate: new Date(this.form.value.dueDate!)
       }))
-
+      this.router.navigate(['/dashboard']);
     } catch (error) {
       let message = 'Something went wrong'
       if (error instanceof HttpErrorResponse) {
@@ -57,8 +78,6 @@ export class CreateTaskComponent {
       }
       this.form.setErrors({ root: message });
     }
-
-    this.form.reset();
   }
 
 }

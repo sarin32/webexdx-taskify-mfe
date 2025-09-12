@@ -1,22 +1,36 @@
-
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Priority, Status, TaskData, TaskService } from '../task.service';
 import { lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmButtonModule } from '@spartan-ng/helm/button';
+import { HlmInputModule } from '@spartan-ng/helm/input';
+import { HlmLabelModule } from '@spartan-ng/helm/label';
+import { BrnSelectModule } from '@spartan-ng/brain/select';
+import { HlmSelectModule } from '@spartan-ng/helm/select';
+import { HlmDatePickerModule } from '@spartan-ng/helm/date-picker';
 
 @Component({
   selector: 'app-update-task',
-  imports: [ReactiveFormsModule, FormsModule, HlmButton],
-  templateUrl: './update-task.component.html',
-  styleUrl: './update-task.component.css'
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    HlmButtonModule,
+    HlmInputModule,
+    HlmLabelModule,
+    BrnSelectModule,
+    HlmSelectModule,
+    HlmDatePickerModule
+  ],
+  templateUrl: './update-task.component.html'
 })
 export class UpdateTaskComponent {
-  private fb = inject(FormBuilder)
-  private taskService = inject(TaskService)
-  private activatedRoute = inject(ActivatedRoute)
+  private fb = inject(FormBuilder);
+  private taskService = inject(TaskService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   form = this.fb.group({
     title: ['', Validators.required],
     description: [''],
@@ -94,6 +108,9 @@ export class UpdateTaskComponent {
     this.form.reset();
   }
 
+  navigateBack() {
+    this.router.navigate(['']);
+  }
 }
 
 

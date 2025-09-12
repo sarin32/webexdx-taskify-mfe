@@ -1,34 +1,45 @@
+<div class="max-w-screen-md mx-auto p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold">Tasks</h2>
+    <button hlmBtn (click)="navToCreateTask()" variant="default">
+      Create Task
+    </button>
+  </div>
 
-<div class="space-y-6 max-w-screen-md m-auto">
-  <button hlmBtn (click)="navToCreateTask()" variant="outline">
-    Create Task
-  </button>
   <!-- Filters -->
-  <div class="flex space-x-4 mb-4 items-center">
-    <span class="font-semibold text-gray-700">Priority:</span>
-    <select
-      [(ngModel)]="form.value.priority"
-      class="select p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
-      (change)="fetchTaskList()"
-    >
-      @for (priority of priorities; track priority.value) {
-        <option [value]="priority.value">{{ priority.label }}</option>
-      }
-    </select>
+  <div class="grid gap-4 p-4 mb-6 rounded-lg border bg-card">
+    <div class="flex flex-wrap gap-4 items-center">
+      <div class="grid gap-2">
+        <label hlmLabel>Priority</label>
+        <brn-select [(ngModel)]="form.value.priority" (ngModelChange)="fetchTaskList()" class="min-w-[140px]">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="Filter priority" />
+          </hlm-select-trigger>
+          <hlm-select-content class="min-w-[8rem]">
+            @for (priority of priorities; track priority.value) {
+              <hlm-option [value]="priority.value">{{ priority.label }}</hlm-option>
+            }
+          </hlm-select-content>
+        </brn-select>
+      </div>
 
-    <span class="font-semibold text-gray-700">Status:</span>
-    <select
-      [(ngModel)]="form.value.status"
-      class="select p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
-      (change)="fetchTaskList()"
-    >
-      @for (status of statuses; track status.value) {
-        <option [value]="status.value">{{ status.label }}</option>
-      }
-    </select>
+      <div class="grid gap-2">
+        <label hlmLabel>Status</label>
+        <brn-select [(ngModel)]="form.value.status" (ngModelChange)="fetchTaskList()" class="min-w-[140px]">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="Filter status" />
+          </hlm-select-trigger>
+          <hlm-select-content class="min-w-[8rem]">
+            @for (status of statuses; track status.value) {
+              <hlm-option [value]="status.value">{{ status.label }}</hlm-option>
+            }
+          </hlm-select-content>
+        </brn-select>
+      </div>
+    </div>
 
     @if (form.errors?.['root']) {
-      <div class="text-red-500 text-sm">
+      <div class="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
         {{ form.errors?.['root'] }}
       </div>
     }
@@ -36,30 +47,38 @@
 
   <!-- Task List -->
   @for (task of tasks; track task._id) {
-    <div class="bg-white p-6 mb-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <div class="flex justify-between items-start mb-3">
-        <div>
-          <h3 class="text-xl font-semibold text-gray-800">{{ task.title }}</h3>
-          <p class="text-sm text-gray-600">{{ task.description }}</p>
+    <section class="mb-4" hlmCard>
+      <div hlmCardHeader>
+        <div class="flex justify-between items-start w-full">
+          <div>
+            <h3 hlmCardTitle class="text-xl">{{ task.title }}</h3>
+            <p hlmCardDescription class="text-muted-foreground">{{ task.description }}</p>
+          </div>
+          <div class="text-sm text-muted-foreground">{{ task.dueDate | date: 'dd MMM yy' }}</div>
         </div>
-        <h3 class="text-sm text-gray-500">{{ task.dueDate | date: 'dd MMM yy' }}</h3>
       </div>
 
-      <div class="flex space-x-4 mb-4">
-        <p class="text-sm text-gray-600">Priority: <span class="font-semibold">{{ task.priority }}</span></p>
-        <p class="text-sm text-gray-600">Status: <span class="font-semibold">{{ task.isCompleted ? 'Completed' : 'Pending' }}</span></p>
+      <div hlmCardContent>
+        <div class="flex gap-4">
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-muted-foreground">Priority:</span>
+            <span class="text-sm font-medium">{{ task.priority }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-muted-foreground">Status:</span>
+            <span class="text-sm font-medium">{{ task.isCompleted ? 'Completed' : 'Pending' }}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="flex space-x-4">
-        <button (click)="edit(task)" hlmBtn variant="secondary" class="px-4 py-2">
-          Edit
-        </button>
-        <button (click)="deleteTask(task._id)" hlmBtn variant="destructive" class="px-4 py-2">
-          Delete
-        </button>
+      <div hlmCardFooter class="flex gap-2">
+        <button (click)="edit(task)" hlmBtn variant="outline">Edit</button>
+        <button (click)="deleteTask(task._id)" hlmBtn variant="destructive">Delete</button>
       </div>
-    </div>
+    </section>
   } @empty {
-    <div class="text-center text-sm text-gray-500">No Tasks available.</div>
+    <div class="text-center p-8 rounded-lg border">
+      <p class="text-muted-foreground">No Tasks available.</p>
+    </div>
   }
 </div>

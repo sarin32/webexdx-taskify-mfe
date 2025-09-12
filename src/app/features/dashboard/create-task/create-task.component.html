@@ -1,72 +1,57 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6 bg-slate-100 p-5 max-w-md m-auto" >
-  <!-- Title Input -->
-  <div class="w-full">
-    <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-    <input
-      id="title"
-      formControlName="title"
-      type="text"
-      class="input w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-      placeholder="Enter Task Title"
-    />
-    @if(form.controls.title.errors && form.controls.title.touched) {
-      <div class="mt-2 text-sm text-red-500">Title is required</div>
-    }
-  </div>
-
-  <!-- Description Input -->
-  <div class="w-full">
-    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-    <input
-      id="description"
-      formControlName="description"
-      type="text"
-      class="input w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-      placeholder="Enter Task Description"
-    />
-    @if(form.controls.description.errors && form.controls.description.touched) {
-      <div class="mt-2 text-sm text-red-500">Description is required</div>
-    }
-  </div>
-
-  <!-- Priority Select -->
-  <div class="w-full">
-    <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
-    <select
-      id="priority"
-      formControlName="priority"
-      class="select w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-    >
-      @for (priority of priorities; track priority.value) {
-        <option [value]="priority.value">{{ priority.label }}</option>
+<div class="max-w-lg mx-auto p-6">
+  <h2 class="text-2xl font-semibold text-center mb-6">Create Task</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="grid gap-2">
+      <label hlmLabel for="title">Title</label>
+      <input hlmInput id="title" type="text" formControlName="title" class="w-full" placeholder="Enter task title" />
+      @if (form.get('title')?.touched && form.get('title')?.errors?.['required']) {
+        <p class="text-destructive text-sm">Title is required</p>
       }
-    </select>
-  </div>
-
-  <!-- Due Date Input -->
-  <div class="w-full">
-    <label for="dueDate" class="block text-sm font-medium text-gray-700">Due Date</label>
-    <input
-      id="dueDate"
-      formControlName="dueDate"
-      type="date"
-      class="input w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-    />
-    @if(form.controls.dueDate.errors && form.controls.dueDate.touched) {
-      <div class="mt-2 text-sm text-red-500">Due date is required</div>
-    }
-  </div>
-
-  @if (form.errors?.['root']) {
-    <div class="text-red-500 text-sm">
-      {{ form.errors?.['root'] }}
     </div>
-  }
 
-  <!-- Submit Button -->
-  <div class="w-full">
-    <button type="submit" [disabled]="isLoading" hlmBtn class="mt-3 w-full">
-      {{ isLoading ? 'Loading...' : 'Create Task' }}
-    </button>
-  </div>
-</form>
+    <div class="grid gap-2">
+      <label hlmLabel for="description">Description</label>
+      <input hlmInput id="description" type="text" formControlName="description" class="w-full" placeholder="Enter task description" />
+    </div>
+
+    <div class="grid gap-2">
+      <label hlmLabel>Priority</label>
+      <brn-select formControlName="priority" class="w-full">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Select priority" />
+        </hlm-select-trigger>
+        <hlm-select-content class="min-w-[8rem]">
+          @for (priority of priorities; track priority.value) {
+            <hlm-option [value]="priority.value">{{ priority.label }}</hlm-option>
+          }
+        </hlm-select-content>
+      </brn-select>
+    </div>
+
+    <div class="grid gap-2">
+      <label hlmLabel for="dueDate">Due Date</label>
+      <hlm-date-picker buttonId="dueDate" formControlName="dueDate" class="w-full">
+        <span>Pick a date</span>
+      </hlm-date-picker>
+      @if (form.get('dueDate')?.touched && form.get('dueDate')?.errors?.['required']) {
+        <p class="text-destructive text-sm">Due date is required</p>
+      }
+    </div>
+
+    @if (form.errors?.['root']) {
+      <div class="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+        {{ form.errors?.['root'] }}
+      </div>
+    }
+
+    <div class="flex justify-between items-center pt-4">
+      <button hlmBtn variant="ghost" class="flex items-center gap-2" (click)="navigateBack()">
+        <span>←</span>
+        <span>Back</span>
+      </button>
+      <button hlmBtn type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Creating...' : 'Create Task' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,18 +1,28 @@
-
-
-import { DatePipe, NgFor } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Priority, TaskData, TaskService } from './task.service';
 import { lastValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { BrnSelectModule } from '@spartan-ng/brain/select';
+import { HlmSelectModule } from '@spartan-ng/helm/select';
 
 
 @Component({
   selector: 'app-dashboard',
-  imports: [ReactiveFormsModule, FormsModule, DatePipe,HlmButton],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    DatePipe,
+    HlmButton,
+    HlmCardImports,
+    BrnSelectModule,
+    HlmSelectModule
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
