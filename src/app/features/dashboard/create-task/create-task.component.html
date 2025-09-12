@@ -30,7 +30,7 @@
 
     <div class="grid gap-2">
       <label hlmLabel for="dueDate">Due Date</label>
-      <hlm-date-picker buttonId="dueDate" formControlName="dueDate" class="w-full">
+      <hlm-date-picker buttonId="dueDate"  formControlName="dueDate" class="w-full">
         <span>Pick a date</span>
       </hlm-date-picker>
       @if (form.get('dueDate')?.touched && form.get('dueDate')?.errors?.['required']) {

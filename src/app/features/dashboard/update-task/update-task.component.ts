@@ -36,7 +36,7 @@ export class UpdateTaskComponent {
     description: [''],
     priority: ['medium' satisfies Priority as Priority, Validators.required],
     status: ['pending' satisfies Status as Status, Validators.required],
-    dueDate: ['', Validators.required],
+    dueDate: [new Date(), Validators.required],
   });
   isLoading = false;
 
@@ -76,11 +76,12 @@ export class UpdateTaskComponent {
     this.taskData = await lastValueFrom(this.taskService.getTask(taskId))
     this.form.setValue({
       description: this.taskData.description,
-      dueDate: (new Date(this.taskData.dueDate)).toISOString().split('T')[0],
+      dueDate: new Date(this.taskData.dueDate) ,
       priority: this.taskData.priority,
-      status: this.taskData.isCompleted? 'completed' : 'pending',
+      status: this.taskData.isCompleted ? 'completed' : 'pending',
       title: this.taskData.title,
     })
+    console.log(this.form.value);
   }
   async onSubmit() {
     if (!this.form.valid) {
@@ -96,7 +97,7 @@ export class UpdateTaskComponent {
         isCompleted: Boolean(this.form.value.status === 'completed'),
         taskId: this.taskData._id
       }))
-
+      this.router.navigate(['']);
     } catch (error) {
       let message = 'Something went wrong'
       if (error instanceof HttpErrorResponse) {

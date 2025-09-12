@@ -64,13 +64,14 @@ export class CreateTaskComponent {
       return
     }
     try {
+      console.log(this.form.value);
       await lastValueFrom(this.taskService.createTask({
         title: this.form.value.title!,
         priority: this.form.value.priority!,
         description: this.form.value.description!,
         dueDate: new Date(this.form.value.dueDate!)
       }))
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/']);
     } catch (error) {
       let message = 'Something went wrong'
       if (error instanceof HttpErrorResponse) {
