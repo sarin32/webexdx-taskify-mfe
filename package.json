@@ -2,9 +2,9 @@
   "name": "taskify",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng s --project taskify --host 0.0.0.0 --disable-host-check --verbose --port 9003",
-    "build": "ng build",
+    "build:prod": "ng build taskify --configuration production",
+    "build:dev": "ng build taskify --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:single-spa:taskify": "ng build taskify --configuration production"
