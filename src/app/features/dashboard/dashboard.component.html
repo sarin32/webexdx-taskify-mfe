@@ -59,15 +59,26 @@
       </div>
 
       <div hlmCardContent>
-        <div class="flex gap-4">
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-muted-foreground">Priority:</span>
-            <span class="text-sm font-medium">{{ task.priority }}</span>
+        <div class="flex justify-between items-center">
+          <div class="flex gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-muted-foreground">Priority:</span>
+              <span class="text-sm font-medium">{{ task.priority }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-muted-foreground">Status:</span>
+              <span class="text-sm font-medium">{{ task.isCompleted ? 'Completed' : 'Pending' }}</span>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-muted-foreground">Status:</span>
-            <span class="text-sm font-medium">{{ task.isCompleted ? 'Completed' : 'Pending' }}</span>
-          </div>
+          <button 
+            hlmBtn 
+            [variant]="task.isCompleted ? 'outline' : 'default'" 
+            size="sm"
+            class="flex items-center gap-2"
+            (click)="toggleTaskStatus(task)"
+            [disabled]="loadingTaskId === task._id">
+            <span>{{ task.isCompleted ? 'Mark Pending' : 'Complete' }}</span>
+          </button>
         </div>
       </div>
 

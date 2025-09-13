@@ -31,6 +31,9 @@ export class DashboardComponent {
   private fb = inject(FormBuilder)
   private taskService = inject(TaskService)
 
+  isLoading = false;
+  loadingTaskId: string | null = null;
+
   priorities: { label: string, value: Priority | 'all' }[] = [
     {
       label: 'All',
@@ -99,6 +102,29 @@ export class DashboardComponent {
 
   edit(task: TaskData) {
     this.router.navigate(['edit', task._id])
+  }
+
+  async toggleTaskStatus(task: TaskData) {
+    this.loadingTaskId = task._id;
+    try {
+      await lastValueFrom(this.taskService.updateTask({
+        title: task.title,
+        description: task.description,
+        priority: task.priority,
+        dueDate: task.dueDate,
+        isCompleted: !task.isCompleted,
+        taskId: task._id
+      }));
+      await this.fetchTaskList();
+    } catch (error) {
+      let message = 'Something went wrong';
+      if (error instanceof HttpErrorResponse) {
+        message = error.error.message || message;
+      }
+      this.form.setErrors({ root: message });
+    } finally {
+      this.loadingTaskId = null;
+    }
   }
 }
 
