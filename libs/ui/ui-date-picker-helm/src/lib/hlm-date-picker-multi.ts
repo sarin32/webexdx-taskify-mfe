@@ -1,23 +1,27 @@
-import { BooleanInput, NumberInput } from '@angular/cdk/coercion';
+import type { BooleanInput, NumberInput } from '@angular/cdk/coercion';
 import {
-	booleanAttribute,
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	forwardRef,
-	input,
-	linkedSignal,
-	numberAttribute,
-	output,
-	signal,
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  forwardRef,
+  input,
+  linkedSignal,
+  numberAttribute,
+  output,
+  signal,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideCalendar } from '@ng-icons/lucide';
+import { lucideChevronDown } from '@ng-icons/lucide';
 import { hlm } from '@spartan-ng/brain/core';
-import { BrnDialogState } from '@spartan-ng/brain/dialog';
-import { type ChangeFn, type TouchFn } from '@spartan-ng/brain/forms';
-import { BrnPopover, BrnPopoverContent, BrnPopoverTrigger } from '@spartan-ng/brain/popover';
+import type { BrnDialogState } from '@spartan-ng/brain/dialog';
+import type { ChangeFn, TouchFn } from '@spartan-ng/brain/forms';
+import {
+  BrnPopover,
+  BrnPopoverContent,
+  BrnPopoverTrigger,
+} from '@spartan-ng/brain/popover';
 import { HlmCalendarMulti } from '@spartan-ng/helm/calendar';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmPopoverContent } from '@spartan-ng/helm/popover';
@@ -25,20 +29,37 @@ import type { ClassValue } from 'clsx';
 import { injectHlmDatePickerMultiConfig } from './hlm-date-picker-multi.token';
 
 export const HLM_DATE_PICKER_MUTLI_VALUE_ACCESSOR = {
-	provide: NG_VALUE_ACCESSOR,
-	useExisting: forwardRef(() => HlmDatePickerMulti),
-	multi: true,
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => HlmDatePickerMulti),
+  multi: true,
 };
 
-@Component({
-	selector: 'hlm-date-picker-multi',
-	imports: [NgIcon, HlmIcon, BrnPopover, BrnPopoverTrigger, BrnPopoverContent, HlmPopoverContent, HlmCalendarMulti],
-	providers: [HLM_DATE_PICKER_MUTLI_VALUE_ACCESSOR, provideIcons({ lucideCalendar })],
-	template: `
-		<brn-popover sideOffset="5" [state]="_popoverState()" (stateChanged)="_popoverState.set($event)">
-			<button type="button" [class]="_computedClass()" [disabled]="_mutableDisabled()" brnPopoverTrigger>
-				<ng-icon hlm size="sm" name="lucideCalendar" />
+let nextId = 0;
 
+@Component({
+  selector: 'hlm-date-picker-multi',
+  imports: [
+    NgIcon,
+    HlmIcon,
+    BrnPopover,
+    BrnPopoverTrigger,
+    BrnPopoverContent,
+    HlmPopoverContent,
+    HlmCalendarMulti,
+  ],
+  providers: [
+    HLM_DATE_PICKER_MUTLI_VALUE_ACCESSOR,
+    provideIcons({ lucideChevronDown }),
+  ],
+  template: `
+		<brn-popover sideOffset="5" [state]="_popoverState()" (stateChanged)="_popoverState.set($event)">
+			<button
+				[id]="buttonId()"
+				type="button"
+				[class]="_computedClass()"
+				[disabled]="_mutableDisabled()"
+				brnPopoverTrigger
+			>
 				<span class="truncate">
 					@if (_formattedDate(); as formattedDate) {
 						{{ formattedDate }}
@@ -46,6 +67,8 @@ export const HLM_DATE_PICKER_MUTLI_VALUE_ACCESSOR = {
 						<ng-content />
 					}
 				</span>
+
+				<ng-icon hlm size="sm" name="lucideChevronDown" />
 			</button>
 
 			<div hlmPopoverContent class="w-auto p-0" *brnPopoverContent="let ctx">
@@ -62,114 +85,126 @@ export const HLM_DATE_PICKER_MUTLI_VALUE_ACCESSOR = {
 			</div>
 		</brn-popover>
 	`,
-	host: {
-		class: 'block',
-	},
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'block',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HlmDatePickerMulti<T> implements ControlValueAccessor {
-	private readonly _config = injectHlmDatePickerMultiConfig<T>();
+  private readonly _config = injectHlmDatePickerMultiConfig<T>();
 
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected readonly _computedClass = computed(() =>
-		hlm(
-			'inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm ring-offset-background transition-all border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-[280px] justify-start text-left font-normal',
-			'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-			'disabled:pointer-events-none disabled:opacity-50',
-			'[&_ng-icon]:pointer-events-none [&_ng-icon]:shrink-0',
-			!this._mutableDate() ? 'text-muted-foreground' : '',
-			this.userClass(),
-		),
-	);
+  public readonly userClass = input<ClassValue>('', { alias: 'class' });
+  protected readonly _computedClass = computed(() =>
+    hlm(
+      'ring-offset-background border-input bg-background hover:bg-accent dark:bg-input/30 dark:hover:bg-input/50 hover:text-accent-foreground inline-flex h-9 w-[280px] cursor-default items-center justify-between gap-2 whitespace-nowrap rounded-md border px-3 py-2 text-left text-sm font-normal transition-all disabled:pointer-events-none disabled:opacity-50',
+      'focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+      'disabled:pointer-events-none disabled:opacity-50',
+      '[&_ng-icon]:pointer-events-none [&_ng-icon]:shrink-0',
+      this.userClass(),
+    ),
+  );
 
-	/** The minimum date that can be selected.*/
-	public readonly min = input<T>();
+  /** The id of the button that opens the date picker. */
+  public readonly buttonId = input<string>(`hlm-date-picker-multi-${nextId++}`);
 
-	/** The maximum date that can be selected. */
-	public readonly max = input<T>();
+  /** The minimum date that can be selected.*/
+  public readonly min = input<T>();
 
-	/** The minimum selectable dates.  */
-	public readonly minSelection = input<number, NumberInput>(undefined, {
-		transform: numberAttribute,
-	});
+  /** The maximum date that can be selected. */
+  public readonly max = input<T>();
 
-	/** The maximum selectable dates.  */
-	public readonly maxSelection = input<number, NumberInput>(undefined, {
-		transform: numberAttribute,
-	});
+  /** The minimum selectable dates.  */
+  public readonly minSelection = input<number, NumberInput>(undefined, {
+    transform: numberAttribute,
+  });
 
-	/** Determine if the date picker is disabled. */
-	public readonly disabled = input<boolean, BooleanInput>(false, {
-		transform: booleanAttribute,
-	});
+  /** The maximum selectable dates.  */
+  public readonly maxSelection = input<number, NumberInput>(undefined, {
+    transform: numberAttribute,
+  });
 
-	/** The selected value. */
-	public readonly date = input<T[]>();
+  /** Determine if the date picker is disabled. */
+  public readonly disabled = input<boolean, BooleanInput>(false, {
+    transform: booleanAttribute,
+  });
 
-	protected readonly _mutableDate = linkedSignal(this.date);
+  /** The selected value. */
+  public readonly date = input<T[]>();
 
-	/** If true, the date picker will close when the max selection of dates is reached. */
-	public readonly autoCloseOnMaxSelection = input<boolean, BooleanInput>(this._config.autoCloseOnMaxSelection, {
-		transform: booleanAttribute,
-	});
+  protected readonly _mutableDate = linkedSignal(this.date);
 
-	/** Defines how the date should be displayed in the UI.  */
-	public readonly formatDates = input<(date: T[]) => string>(this._config.formatDates);
+  /** If true, the date picker will close when the max selection of dates is reached. */
+  public readonly autoCloseOnMaxSelection = input<boolean, BooleanInput>(
+    this._config.autoCloseOnMaxSelection,
+    {
+      transform: booleanAttribute,
+    },
+  );
 
-	/** Defines how the date should be transformed before saving to model/form. */
-	public readonly transformDates = input<(date: T[]) => T[]>(this._config.transformDates);
+  /** Defines how the date should be displayed in the UI.  */
+  public readonly formatDates = input<(date: T[]) => string>(
+    this._config.formatDates,
+  );
 
-	protected readonly _popoverState = signal<BrnDialogState | null>(null);
+  /** Defines how the date should be transformed before saving to model/form. */
+  public readonly transformDates = input<(date: T[]) => T[]>(
+    this._config.transformDates,
+  );
 
-	protected readonly _mutableDisabled = linkedSignal(this.disabled);
+  protected readonly _popoverState = signal<BrnDialogState | null>(null);
 
-	protected readonly _formattedDate = computed(() => {
-		const dates = this._mutableDate();
-		return dates ? this.formatDates()(dates) : undefined;
-	});
+  protected readonly _mutableDisabled = linkedSignal(this.disabled);
 
-	public readonly dateChange = output<T[]>();
+  protected readonly _formattedDate = computed(() => {
+    const dates = this._mutableDate();
+    return dates ? this.formatDates()(dates) : undefined;
+  });
 
-	protected _onChange?: ChangeFn<T[]>;
-	protected _onTouched?: TouchFn;
+  public readonly dateChange = output<T[]>();
 
-	protected _handleChange(value: T[] | undefined) {
-		if (value === undefined) return;
+  protected _onChange?: ChangeFn<T[]>;
+  protected _onTouched?: TouchFn;
 
-		if (this._mutableDisabled()) return;
-		const transformedDate = this.transformDates()(value);
+  protected _handleChange(value: T[] | undefined) {
+    if (value === undefined) return;
 
-		this._mutableDate.set(transformedDate);
-		this._onChange?.(transformedDate);
-		this.dateChange.emit(transformedDate);
+    if (this._mutableDisabled()) return;
+    const transformedDate = this.transformDates()(value);
 
-		if (this.autoCloseOnMaxSelection() && this._mutableDate()?.length === this.maxSelection()) {
-			this._popoverState.set('closed');
-		}
-	}
+    this._mutableDate.set(transformedDate);
+    this._onChange?.(transformedDate);
+    this.dateChange.emit(transformedDate);
 
-	/** CONTROL VALUE ACCESSOR */
-	public writeValue(value: T[] | null): void {
-		this._mutableDate.set(value ? this.transformDates()(value) : undefined);
-	}
+    if (
+      this.autoCloseOnMaxSelection() &&
+      this._mutableDate()?.length === this.maxSelection()
+    ) {
+      this._popoverState.set('closed');
+    }
+  }
 
-	public registerOnChange(fn: ChangeFn<T[]>): void {
-		this._onChange = fn;
-	}
+  /** CONTROL VALUE ACCESSOR */
+  public writeValue(value: T[] | null): void {
+    this._mutableDate.set(value ? this.transformDates()(value) : undefined);
+  }
 
-	public registerOnTouched(fn: TouchFn): void {
-		this._onTouched = fn;
-	}
+  public registerOnChange(fn: ChangeFn<T[]>): void {
+    this._onChange = fn;
+  }
 
-	public setDisabledState(isDisabled: boolean): void {
-		this._mutableDisabled.set(isDisabled);
-	}
+  public registerOnTouched(fn: TouchFn): void {
+    this._onTouched = fn;
+  }
 
-	public open() {
-		this._popoverState.set('open');
-	}
+  public setDisabledState(isDisabled: boolean): void {
+    this._mutableDisabled.set(isDisabled);
+  }
 
-	public close() {
-		this._popoverState.set('closed');
-	}
+  public open() {
+    this._popoverState.set('open');
+  }
+
+  public close() {
+    this._popoverState.set('closed');
+  }
 }

@@ -1,6 +1,4 @@
-import { Routes } from '@angular/router';
-import { dashboardRoutes } from './features/dashboard/dashboard.routes';
+import type { Routes } from '@angular/router';
+import { taskRoutes } from './features/task/task.routes';
 
-export const routes: Routes = [
-    {path: '', children: dashboardRoutes}
-];
+export const routes: Routes = [{ path: '', children: taskRoutes }];

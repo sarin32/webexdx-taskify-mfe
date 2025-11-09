@@ -20,19 +20,19 @@ export * from './lib/hlm-select-trigger';
 export * from './lib/hlm-select-value';
 
 export const HlmSelectImports = [
-	HlmSelectContent,
-	HlmSelectTrigger,
-	HlmSelectOption,
-	HlmSelectValue,
-	HlmSelect,
-	HlmSelectScrollUp,
-	HlmSelectScrollDown,
-	HlmSelectLabel,
-	HlmSelectGroup,
+  HlmSelectContent,
+  HlmSelectTrigger,
+  HlmSelectOption,
+  HlmSelectValue,
+  HlmSelect,
+  HlmSelectScrollUp,
+  HlmSelectScrollDown,
+  HlmSelectLabel,
+  HlmSelectGroup,
 ] as const;
 
 @NgModule({
-	imports: [...HlmSelectImports],
-	exports: [...HlmSelectImports],
+  imports: [...HlmSelectImports],
+  exports: [...HlmSelectImports],
 })
 export class HlmSelectModule {}

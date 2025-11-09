@@ -7,10 +7,14 @@ export * from './lib/hlm-calendar';
 export * from './lib/hlm-calendar-multi';
 export * from './lib/hlm-calendar-range';
 
-export const HlmCalendarImports = [HlmCalendar, HlmCalendarMulti, HlmCalendarRange] as const;
+export const HlmCalendarImports = [
+  HlmCalendar,
+  HlmCalendarMulti,
+  HlmCalendarRange,
+] as const;
 
 @NgModule({
-	imports: [...HlmCalendarImports],
-	exports: [...HlmCalendarImports],
+  imports: [...HlmCalendarImports],
+  exports: [...HlmCalendarImports],
 })
 export class HlmCalendarModule {}

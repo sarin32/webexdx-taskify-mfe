@@ -4,7 +4,7 @@ import { HlmInput } from './lib/hlm-input';
 export * from './lib/hlm-input';
 
 @NgModule({
-	imports: [HlmInput],
-	exports: [HlmInput],
+  imports: [HlmInput],
+  exports: [HlmInput],
 })
 export class HlmInputModule {}

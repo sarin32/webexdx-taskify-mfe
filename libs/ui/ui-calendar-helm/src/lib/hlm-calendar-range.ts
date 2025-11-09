@@ -1,28 +1,28 @@
-import { BooleanInput, NumberInput } from '@angular/cdk/coercion';
+import type { BooleanInput, NumberInput } from '@angular/cdk/coercion';
 import {
-	ChangeDetectionStrategy,
-	Component,
-	booleanAttribute,
-	computed,
-	input,
-	model,
-	numberAttribute,
-	viewChild,
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  model,
+  numberAttribute,
+  viewChild,
 } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideChevronLeft, lucideChevronRight } from '@ng-icons/lucide';
 import {
-	BrnCalendarCell,
-	BrnCalendarCellButton,
-	BrnCalendarGrid,
-	BrnCalendarHeader,
-	BrnCalendarNextButton,
-	BrnCalendarPreviousButton,
-	BrnCalendarRange,
-	BrnCalendarWeek,
-	BrnCalendarWeekday,
-	Weekday,
-	injectBrnCalendarI18n,
+  BrnCalendarCell,
+  BrnCalendarCellButton,
+  BrnCalendarGrid,
+  BrnCalendarHeader,
+  BrnCalendarNextButton,
+  BrnCalendarPreviousButton,
+  BrnCalendarRange,
+  BrnCalendarWeek,
+  BrnCalendarWeekday,
+  injectBrnCalendarI18n,
+  type Weekday,
 } from '@spartan-ng/brain/calendar';
 import { hlm } from '@spartan-ng/brain/core';
 import { injectDateAdapter } from '@spartan-ng/brain/date-time';
@@ -31,22 +31,22 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import type { ClassValue } from 'clsx';
 
 @Component({
-	selector: 'hlm-calendar-range',
-	imports: [
-		BrnCalendarHeader,
-		BrnCalendarNextButton,
-		BrnCalendarPreviousButton,
-		BrnCalendarWeekday,
-		BrnCalendarWeek,
-		BrnCalendarCellButton,
-		BrnCalendarCell,
-		BrnCalendarGrid,
-		NgIcon,
-		HlmIcon,
-		BrnCalendarRange,
-	],
-	viewProviders: [provideIcons({ lucideChevronLeft, lucideChevronRight })],
-	template: `
+  selector: 'hlm-calendar-range',
+  imports: [
+    BrnCalendarHeader,
+    BrnCalendarNextButton,
+    BrnCalendarPreviousButton,
+    BrnCalendarWeekday,
+    BrnCalendarWeek,
+    BrnCalendarCellButton,
+    BrnCalendarCell,
+    BrnCalendarGrid,
+    NgIcon,
+    HlmIcon,
+    BrnCalendarRange,
+  ],
+  viewProviders: [provideIcons({ lucideChevronLeft, lucideChevronRight })],
+  template: `
 		<div
 			brnCalendarRange
 			[min]="min()"
@@ -92,9 +92,9 @@ import type { ClassValue } from 'clsx';
 								*brnCalendarWeekday="let weekday"
 								scope="col"
 								class="text-muted-foreground w-8 rounded-md text-[0.8rem] font-normal"
-								[attr.aria-label]="_i18n.labelWeekday(weekday)"
+								[attr.aria-label]="_i18n.config().labelWeekday(weekday)"
 							>
-								{{ _i18n.formatWeekdayName(weekday) }}
+								{{ _i18n.config().formatWeekdayName(weekday) }}
 							</th>
 						</tr>
 					</thead>
@@ -117,67 +117,71 @@ import type { ClassValue } from 'clsx';
 			</div>
 		</div>
 	`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HlmCalendarRange<T> {
-	public readonly calendarClass = input<ClassValue>('');
+  public readonly calendarClass = input<ClassValue>('');
 
-	protected readonly _computedCalenderClass = computed(() => hlm('rounded-md border p-3', this.calendarClass()));
+  protected readonly _computedCalenderClass = computed(() =>
+    hlm('rounded-md border p-3', this.calendarClass()),
+  );
 
-	/** Access the calendar i18n */
-	protected readonly _i18n = injectBrnCalendarI18n();
+  /** Access the calendar i18n */
+  protected readonly _i18n = injectBrnCalendarI18n();
 
-	/** Access the date time adapter */
-	protected readonly _dateAdapter = injectDateAdapter<T>();
+  /** Access the date time adapter */
+  protected readonly _dateAdapter = injectDateAdapter<T>();
 
-	/** The minimum date that can be selected.*/
-	public readonly min = input<T>();
+  /** The minimum date that can be selected.*/
+  public readonly min = input<T>();
 
-	/** The maximum date that can be selected. */
-	public readonly max = input<T>();
+  /** The maximum date that can be selected. */
+  public readonly max = input<T>();
 
-	/** Determine if the date picker is disabled. */
-	public readonly disabled = input<boolean, BooleanInput>(false, {
-		transform: booleanAttribute,
-	});
+  /** Determine if the date picker is disabled. */
+  public readonly disabled = input<boolean, BooleanInput>(false, {
+    transform: booleanAttribute,
+  });
 
-	/** The start date of the range. */
-	public readonly startDate = model<T>();
+  /** The start date of the range. */
+  public readonly startDate = model<T>();
 
-	/** The end date of the range. */
-	public readonly endDate = model<T>();
+  /** The end date of the range. */
+  public readonly endDate = model<T>();
 
-	/** Whether a specific date is disabled. */
-	public readonly dateDisabled = input<(date: T) => boolean>(() => false);
+  /** Whether a specific date is disabled. */
+  public readonly dateDisabled = input<(date: T) => boolean>(() => false);
 
-	/** The day the week starts on */
-	public readonly weekStartsOn = input<Weekday, NumberInput>(0, {
-		transform: (v: unknown) => numberAttribute(v) as Weekday,
-	});
+  /** The day the week starts on */
+  public readonly weekStartsOn = input<Weekday, NumberInput>(undefined, {
+    transform: (v: unknown) => numberAttribute(v) as Weekday,
+  });
 
-	/** The default focused date. */
-	public readonly defaultFocusedDate = input<T>();
+  /** The default focused date. */
+  public readonly defaultFocusedDate = input<T>();
 
-	/** Access the calendar directive */
-	private readonly _calendar = viewChild.required(BrnCalendarRange);
+  /** Access the calendar directive */
+  private readonly _calendar = viewChild.required(BrnCalendarRange);
 
-	/** Get the heading for the current month and year */
-	protected readonly _heading = computed(() =>
-		this._i18n.formatHeader(
-			this._dateAdapter.getMonth(this._calendar().focusedDate()),
-			this._dateAdapter.getYear(this._calendar().focusedDate()),
-		),
-	);
+  /** Get the heading for the current month and year */
+  protected readonly _heading = computed(() =>
+    this._i18n
+      .config()
+      .formatHeader(
+        this._dateAdapter.getMonth(this._calendar().focusedDate()),
+        this._dateAdapter.getYear(this._calendar().focusedDate()),
+      ),
+  );
 
-	protected readonly _btnClass = hlm(
-		buttonVariants({ variant: 'ghost' }),
-		'size-8 p-0 font-normal aria-selected:opacity-100',
-		'data-[outside]:text-muted-foreground data-[outside]:aria-selected:text-muted-foreground',
-		'data-[today]:bg-accent data-[today]:text-accent-foreground',
-		'data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground',
-		'data-[disabled]:text-muted-foreground data-[disabled]:opacity-50',
-		'data-[range-start]:rounded-l-md',
-		'data-[range-end]:rounded-r-md',
-		'data-[range-between]:rounded-none data-[range-between]:bg-accent data-[range-between]:text-accent-foreground',
-	);
+  protected readonly _btnClass = hlm(
+    buttonVariants({ variant: 'ghost' }),
+    'size-8 p-0 font-normal aria-selected:opacity-100',
+    'data-[outside]:text-muted-foreground data-[outside]:aria-selected:text-muted-foreground',
+    'data-[today]:bg-accent data-[today]:text-accent-foreground',
+    'data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground',
+    'data-[disabled]:text-muted-foreground data-[disabled]:opacity-50',
+    'data-[range-start]:rounded-l-md',
+    'data-[range-end]:rounded-r-md',
+    'data-[range-between]:bg-accent data-[range-between]:text-accent-foreground data-[range-between]:rounded-none',
+  );
 }

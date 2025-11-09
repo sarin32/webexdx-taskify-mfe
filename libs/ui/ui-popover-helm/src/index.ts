@@ -9,7 +9,7 @@ export * from './lib/hlm-popover-content';
 export const HlmPopoverImports = [HlmPopoverContent, HlmPopoverClose] as const;
 
 @NgModule({
-	imports: [...HlmPopoverImports],
-	exports: [...HlmPopoverImports],
+  imports: [...HlmPopoverImports],
+  exports: [...HlmPopoverImports],
 })
 export class HlmPopoverModule {}
