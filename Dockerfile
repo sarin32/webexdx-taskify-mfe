@@ -6,6 +6,8 @@ WORKDIR /app
 ENV corepack_enable_download_prompt=0
 RUN corepack enable
 
+ENV PNPM_STORE_PATH=/pnpm/store
+
 # Copy dependency manifests and install all dependencies
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
@@ -13,8 +15,10 @@ RUN pnpm install --frozen-lockfile
 # Copy the full source code
 COPY . .
 
+ARG ENVIRONMENT=prod
+
 # Build the app
-RUN pnpm run build:prod
+RUN pnpm run build:${ENVIRONMENT}
 
 
 # ---- Stage 2: Production image ----

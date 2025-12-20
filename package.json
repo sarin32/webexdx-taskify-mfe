@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "start": "ng serve --port 4001",
-    "build": "ng build -c development",
+    "build:dev": "ng build -c development",
     "build:prod": "ng build -c production",
     "lint": "biome check",
     "fix": "biome check --write"
