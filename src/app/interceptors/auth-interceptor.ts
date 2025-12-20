@@ -8,12 +8,9 @@ export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ) => {
-  // Inject the current `AuthService` and use it to get an authentication token:
-  const authToken = localStorage.getItem('auth_token');
-  // Clone the request to add the authentication header.
+  // No token injection needed for cookies
   const newReq = req.clone({
     withCredentials: true,
-    headers: req.headers.append('Authorization', authToken || ''),
   });
   return next(newReq);
 };
