@@ -11,7 +11,7 @@
         <label hlmLabel>Priority</label>
         <brn-select [formControl]="form.controls.priority" class="min-w-[140px]">
           <hlm-select-trigger class="w-full">
-            <hlm-select-value placeholder="Filter priority"/>
+            <hlm-select-value placeholder="Filter priority" />
           </hlm-select-trigger>
           <hlm-select-content class="min-w-[8rem]">
             @for (priority of priorities; track priority.value) {
@@ -24,7 +24,7 @@
         <label hlmLabel>Status</label>
         <brn-select [formControl]="form.controls.status" class="min-w-[140px]">
           <hlm-select-trigger class="w-full">
-            <hlm-select-value placeholder="Filter status"/>
+            <hlm-select-value placeholder="Filter status" />
           </hlm-select-trigger>
           <hlm-select-content class="min-w-[8rem]">
             @for (status of statuses; track status.value) {
@@ -61,19 +61,11 @@
           </div>
           <div class="flex items-center gap-2">
             <span class="text-sm text-muted-foreground">Status:</span>
-            <span class="text-sm font-medium"
-              >{{ task.isCompleted ? 'Completed' : 'Pending' }}</span
-            >
+            <span class="text-sm font-medium">{{ task.isCompleted ? 'Completed' : 'Pending' }}</span>
           </div>
         </div>
-        <button
-          hlmBtn
-          [variant]="task.isCompleted ? 'outline' : 'default'"
-          size="sm"
-          class="flex items-center gap-2"
-          (click)="toggleTaskStatus(task)"
-          [disabled]="loadingTaskId() === task._id"
-        >
+        <button hlmBtn [variant]="task.isCompleted ? 'outline' : 'default'" size="sm" class="flex items-center gap-2"
+          (click)="toggleTaskStatus(task)" [disabled]="loadingTaskId() === task._id">
           <span>{{ task.isCompleted ? 'Mark Pending' : 'Complete' }}</span>
         </button>
       </div>

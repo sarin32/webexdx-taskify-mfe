@@ -1,67 +1,9 @@
-<div class="max-w-lg mx-auto p-6">
-  <h2 class="text-2xl font-semibold text-center mb-6">Create Task</h2>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-    <div class="grid gap-2">
-      <label hlmLabel for="title">Title</label>
-      <input
-        hlmInput
-        id="title"
-        type="text"
-        formControlName="title"
-        class="w-full"
-        placeholder="Enter task title"
-      >
-      @if (form.get('title')?.touched && form.get('title')?.errors?.['required']) {
-      <p class="text-destructive text-sm">Title is required</p>}
-    </div>
-
-    <div class="grid gap-2">
-      <label hlmLabel for="description">Description</label>
-      <input
-        hlmInput
-        id="description"
-        type="text"
-        formControlName="description"
-        class="w-full"
-        placeholder="Enter task description"
-      >
-    </div>
-
-    <div class="grid gap-2">
-      <label hlmLabel>Priority</label>
-      <brn-select formControlName="priority" class="w-full">
-        <hlm-select-trigger class="w-full">
-          <hlm-select-value placeholder="Select priority"/>
-        </hlm-select-trigger>
-        <hlm-select-content class="min-w-[8rem]">
-          @for (priority of priorities; track priority.value) {
-          <hlm-option [value]="priority.value">{{ priority.label }}</hlm-option>}
-        </hlm-select-content>
-      </brn-select>
-    </div>
-
-    <div class="grid gap-2">
-      <label hlmLabel for="dueDate">Due Date</label>
-      <hlm-date-picker buttonId="dueDate" formControlName="dueDate" class="w-full">
-        <span>Pick a date</span>
-      </hlm-date-picker>
-      @if (form.get('dueDate')?.touched && form.get('dueDate')?.errors?.['required']) {
-      <p class="text-destructive text-sm">Due date is required</p>}
-    </div>
-    @if (form.errors?.['root']) {
-    <div class="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-      {{ form.errors?.['root'] }}
-    </div>
-    }
-
-    <div class="flex justify-between items-center pt-4">
-      <button hlmBtn variant="ghost" class="flex items-center gap-2" (click)="navigateBack()">
-        <span>←</span>
-        <span>Back</span>
-      </button>
-      <button hlmBtn type="submit" [disabled]="isLoading()">
-        {{ isLoading() ? 'Creating...' : 'Create Task' }}
-      </button>
-    </div>
-  </form>
+<div class="max-w-screen-md mx-auto p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold">Create Task</h2>
+    <button hlmBtn variant="ghost" (click)="navigateBack()">
+      <span class="mr-2">←</span> Back
+    </button>
+  </div>
+  <app-task-form [isLoading]="isLoading()" [serverError]="serverError()" (save)="onSubmit($event)"></app-task-form>
 </div>
