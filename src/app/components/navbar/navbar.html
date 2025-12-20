@@ -1,0 +1,13 @@
+<nav class="border-b">
+  <div class="container mx-auto px-4 h-25 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <img src="/logo.svg" alt="WebexDX Logo" class="h-15 w-auto">
+      <span class="text-lg sm:text-xl font-semibold">WebexDX</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <app-mode-toggle/>
+      <button variant="outline" (click)="logout()"></button>
+      Logout
+    </div>
+  </div>
+</nav>

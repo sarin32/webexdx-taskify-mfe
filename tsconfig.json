@@ -23,7 +23,8 @@
       "@spartan-ng/helm/input": ["./libs/ui/ui-input-helm/src/index.ts"],
       "@spartan-ng/helm/label": ["./libs/ui/ui-label-helm/src/index.ts"],
       "@spartan-ng/helm/popover": ["./libs/ui/ui-popover-helm/src/index.ts"],
-      "@spartan-ng/helm/select": ["./libs/ui/ui-select-helm/src/index.ts"]
+      "@spartan-ng/helm/select": ["./libs/ui/ui-select-helm/src/index.ts"],
+      "@spartan-ng/helm/menu": ["./libs/ui/ui-menu-helm/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
